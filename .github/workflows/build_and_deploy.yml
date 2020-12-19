@@ -1,8 +1,11 @@
-name: Build
+name: Build and Deploy
 on:
   push:
     branches:
       - main
+
+config:
+  PUBLIC_URL: &PUBLIC_URL https://gregbrimble.com/
 
 jobs:
   build-js:
@@ -14,16 +17,7 @@ jobs:
       - name: Install Node.js
         shell: bash -l {0}
         run: nvm install && nvm use
-      # - name: Setup Node.js
-      #   uses: actions/setup-node@v2
-      #   with:
-      #     node-version: 12.x
-      - name: Setup Expo
-        uses: expo/expo-github-action@v5
-        with:
-          expo-version: 4.x
-          expo-packager: npm
-          expo-cache: true
+        # TODO: Could cache ~/.nvm/.cache
       - name: Cache Node.js
         uses: actions/cache@v2
         with:
@@ -31,43 +25,33 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
+      - name: Setup Expo
+        uses: expo/expo-github-action@v5
+        with:
+          expo-version: 4.x
+          expo-packager: npm
+          expo-cache: true
       - name: Install Node.js dependencies
         run: npm ci
       - name: Build JavaScript assets
-        run: expo export --public-url https://gregbrimble.com/
-      # TODO: Upload somewhere
+        run: expo export --public-url "$PUBLIC_URL"
+        env:
+          PUBLIC_URL: *PUBLIC_URL
       - name: Upload artifacts to GitHub Actions
         uses: actions/upload-artifact@v2
         with:
           name: JavaScript Assets
           path: dist/
-  upload-js:
-    name: Upload JavaScript Assets
-    needs: build-js
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download JavaScript artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: JavaScript Assets
-      # - name:
   build-web:
     name: Build Web
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      # TODO: nvmrc
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 12.x
-      - name: Setup Expo
-        uses: expo/expo-github-action@v5
-        with:
-          expo-version: 4.x
-          expo-packager: npm
-          expo-cache: true
+      - name: Install Node.js
+        shell: bash -l {0}
+        run: nvm install && nvm use
+        # TODO: Could cache ~/.nvm/.cache
       - name: Cache Node.js
         uses: actions/cache@v2
         with:
@@ -75,16 +59,39 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
+      - name: Setup Expo
+        uses: expo/expo-github-action@v5
+        with:
+          expo-version: 4.x
+          expo-packager: npm
+          expo-cache: true
       - name: Install Node.js dependencies
         run: npm ci
       - name: Build Web
         run: expo build:web
-      # TODO: Upload somewhere
       - name: Upload artifacts to GitHub Actions
         uses: actions/upload-artifact@v2
         with:
           name: Web Assets
           path: web-build/
+  upload-web-and-js:
+    name: Upload Web and JavaScript Assets
+    needs: [build-js, build-web]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Web artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: Web Assets
+          path: dist
+      - name: Download JavaScript artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: JavaScript Assets
+          path: web-build
+      - name: List everything
+        run: find .
+      # - name:
   # build-android:
   #   name: Build Android
   #   runs-on: ubuntu-latest
