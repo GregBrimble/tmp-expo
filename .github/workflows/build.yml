@@ -33,8 +33,43 @@ jobs:
         run: npm ci
       - name: Build JavaScript assets
         run: expo export --public-url https://gregbrimble.com/
+      # TODO: Upload somewhere
       - name: Upload artifacts to GitHub Actions
         uses: actions/upload-artifact@v2
         with:
           name: JavaScript Assets
           path: dist/
+  build-web:
+    name: Build web
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      # TODO: nvmrc
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Setup Expo
+        uses: expo/expo-github-action@v5
+        with:
+          expo-version: 3.x
+          expo-packager: npm
+          expo-cache: true
+      - name: Cache Node.js
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install Node.js dependencies
+        run: npm ci
+      - name: Build Web
+        run: expo build:web
+      # TODO: Upload somewhere
+      - name: Upload artifacts to GitHub Actions
+        uses: actions/upload-artifact@v2
+        with:
+          name: Web Assets
+          path: web-build/
