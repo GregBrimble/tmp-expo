@@ -19,6 +19,15 @@ jobs:
           expo-version: 3.x
           expo-packager: npm
           expo-cache: true
+      - uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - run: npm ci
       - run: expo export --public-url https://gregbrimble.com/
-      # TODO: Save as GitHub Actions Artifacts
+      - uses: actions/upload-artifact@v2
+        with:
+          name: JavaScript Assets
+          path: dist/
