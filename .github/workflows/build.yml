@@ -5,8 +5,8 @@ on:
       - main
 
 jobs:
-  export:
-    name: Export JavaScript Assets
+  build-js:
+    name: Build JavaScript Assets
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -16,20 +16,25 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      # - uses: expo/expo-github-action@v5
-      #   with:
-      #     expo-version: 3.x
-      #     expo-packager: npm
-      #     expo-cache: true
-      - uses: actions/cache@v2
+      - name: Setup Expo
+        uses: expo/expo-github-action@v5
+        with:
+          expo-version: 3.x
+          expo-packager: npm
+          expo-cache: true
+      - name: Cache Node.js
+        uses: actions/cache@v2
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - run: npm ci
-      - run: npx expo export --public-url https://gregbrimble.com/
-      - uses: actions/upload-artifact@v2
+      - name: Install Node.js dependencies
+        run: npm ci
+      - name: Build JavaScript assets
+        run: expo export --public-url https://gregbrimble.com/
+      - name: Upload artifacts to GitHub Actions
+        uses: actions/upload-artifact@v2
         with:
           name: JavaScript Assets
           path: dist/
