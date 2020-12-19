@@ -9,16 +9,18 @@ jobs:
     name: Export JavaScript Assets
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
       # TODO: nvmrc
-      - uses: actions/setup-node@v1
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - uses: expo/expo-github-action@v5
-        with:
-          expo-version: 3.x
-          expo-packager: npm
-          expo-cache: true
+      # - uses: expo/expo-github-action@v5
+      #   with:
+      #     expo-version: 3.x
+      #     expo-packager: npm
+      #     expo-cache: true
       - uses: actions/cache@v2
         with:
           path: ~/.npm
@@ -26,7 +28,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       - run: npm ci
-      - run: expo export --public-url https://gregbrimble.com/
+      - run: npx expo export --public-url https://gregbrimble.com/
       - uses: actions/upload-artifact@v2
         with:
           name: JavaScript Assets
