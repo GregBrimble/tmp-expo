@@ -4,9 +4,6 @@ on:
     branches:
       - main
 
-config:
-  PUBLIC_URL: &PUBLIC_URL https://gregbrimble.com/
-
 jobs:
   build-js:
     name: Build JavaScript Assets
@@ -36,7 +33,7 @@ jobs:
       - name: Build JavaScript assets
         run: expo export --public-url "$PUBLIC_URL"
         env:
-          PUBLIC_URL: *PUBLIC_URL
+          PUBLIC_URL: https://gregbrimble.com/
       - name: Upload artifacts to GitHub Actions
         uses: actions/upload-artifact@v2
         with:
