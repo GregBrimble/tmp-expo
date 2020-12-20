@@ -33,7 +33,7 @@ jobs:
       - name: Build JavaScript assets
         run: expo export --public-url "$PUBLIC_URL"
         env:
-          PUBLIC_URL: https://gregbrimble.com/
+          PUBLIC_URL: https://theevents.company/
       - name: Upload artifacts to GitHub Actions
         uses: actions/upload-artifact@v2
         with:

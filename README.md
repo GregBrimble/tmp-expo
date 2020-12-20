@@ -2,13 +2,16 @@
 
 ## Outline
 
-### Part 1: React Native
+### Part 1: Cross-Platform Applications
 
+- React Native & Expo
 - Flutter is an alternative
 
 ### Part 2: Continuous Delivery
 
 - GitHub Actions
+- CircleCI
+- Travis
 
 #### Deployment
 
