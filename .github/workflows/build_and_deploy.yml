@@ -128,11 +128,10 @@ jobs:
       - name: Install Turtle and build Android
         run: |
           npm install -g turtle-cli@0.20.4
-          npm list -g --depth=0
           PUBLIC_URL_ANDROID="$PUBLIC_URL""android-index.json"
           echo $EXPO_ANDROID_KEYSTORE_BASE64 > android.jks.base64
           base64 --decode android.jks.base64 > android.jks
-          turtle build:android \
+          ~/.npm-global/lib/turtle-cli/bin/turtle.js build:android \
             -o ./android-app-bundle.aab \
             --public-url "$PUBLIC_URL_ANDROID" \
             --keystore-path ./android.jks \
