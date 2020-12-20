@@ -131,19 +131,19 @@ jobs:
           PUBLIC_URL_ANDROID="$PUBLIC_URL""android-index.json"
           echo $EXPO_ANDROID_KEYSTORE_BASE64 > android.jks.base64
           base64 --decode android.jks.base64 > android.jks
-          npx turtle build:android \
+          turtle build:android \
             -o ./android-app-bundle.aab \
             --public-url "$PUBLIC_URL_ANDROID" \
             --keystore-path ./android.jks \
             --keystore-alias $EXPO_ANDROID_KEYSTORE_ALIAS
           rm -rf android.jks android.jks.base64
         env:
+          NPM_CONFIG_PREFIX: "~/.npm-global"
           PUBLIC_URL: https://theevents.company/
           EXPO_ANDROID_KEYSTORE_BASE64: ${{ secrets.EXPO_ANDROID_KEYSTORE_BASE64 }}
           EXPO_ANDROID_KEYSTORE_ALIAS: ${{ secrets.EXPO_ANDROID_KEYSTORE_ALIAS }}
           EXPO_ANDROID_KEYSTORE_PASSWORD: ${{ secrets.EXPO_ANDROID_KEYSTORE_PASSWORD }}
           EXPO_ANDROID_KEY_PASSWORD: ${{ secrets.EXPO_ANDROID_KEY_PASSWORD }}
-          NPM_CONFIG_PREFIX: "~/.npm-global"
       - name: Upload artifacts to GitHub Actions
         uses: actions/upload-artifact@v2
         with:
