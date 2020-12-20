@@ -101,3 +101,53 @@ jobs:
           BRANCH: gh-pages
           FOLDER: web-build
           CLEAN: true
+  build-android:
+    name: Build Android
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Node.js
+        shell: bash -l {0}
+        run: nvm install && nvm use
+        # TODO: Could cache ~/.nvm/.cache
+      - name: Cache Node.js
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Cache Turtle
+        uses: actions/cache@v2
+        with:
+          path: ~/.Turtle
+          key: ${{ runner.os }}-turtle
+      - name: Install Node.js dependencies
+        run: npm ci
+      - name: Install Turtle
+        run: npm install -g turtle-cli@0.20.4
+        env:
+          NPM_CONFIG_PREFIX: "~/.npm-global"
+      - name: Build Android
+        run: |
+          PUBLIC_URL_ANDROID="$PUBLIC_URL""android-index.json"
+          echo $EXPO_ANDROID_KEYSTORE_BASE64 > android.jks.base64
+          base64 --decode android.jks.base64 > android.jks
+          turtle build:android \
+            -o ./android-app-bundle.aab \
+            --public-url "$PUBLIC_URL_ANDROID" \
+            --keystore-path ./android.jks \
+            --keystore-alias $EXPO_ANDROID_KEYSTORE_ALIAS
+          rm -rf android.jks android.jks.base64
+        env:
+          PUBLIC_URL: https://theevents.company/
+          EXPO_ANDROID_KEYSTORE_BASE64: ${{ secrets.EXPO_ANDROID_KEYSTORE_BASE64 }}
+          EXPO_ANDROID_KEYSTORE_ALIAS: ${{ secrets.EXPO_ANDROID_KEYSTORE_ALIAS }}
+          EXPO_ANDROID_KEYSTORE_PASSWORD: ${{ secrets.EXPO_ANDROID_KEYSTORE_PASSWORD }}
+          EXPO_ANDROID_KEY_PASSWORD: ${{ secrets.EXPO_ANDROID_KEY_PASSWORD }}
+      - name: Upload artifacts to GitHub Actions
+        uses: actions/upload-artifact@v2
+        with:
+          name: android-app-bundle
+          path: ./android-app-bundle.aab
