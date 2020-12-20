@@ -89,10 +89,10 @@ jobs:
           name: js-assets
           path: web-build
       - name: Combine web and JavaScript artifacts
-        run: cp -vn dist/* web-build/
+        run: cp -vnr dist/* web-build/
         # TODO: Overriding web-build files with dist files is disabled with `-n`. Instead, we should test and fail the workflow if there's a match.
       - name: Add web-static files
-        run: cp -vn web-static/* web-build/
+        run: cp -vnr web-static/* web-build/
         # TODO: Overriding web-build files with web-static files is disabled with `-n`. Instead, we should test and fail the workflow if there's a match.
       - name: Deploy web and JavaScript
         uses: JamesIves/github-pages-deploy-action@3.7.1
