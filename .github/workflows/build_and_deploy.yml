@@ -71,8 +71,8 @@ jobs:
         with:
           name: web-assets
           path: web-build/
-  deploy-web-js-api:
-    name: Deploy web, JavaScript and API
+  deploy-web-and-js:
+    name: Deploy web and JavaScript
     needs: [build-js, build-web]
     runs-on: ubuntu-latest
     steps:
@@ -104,5 +104,14 @@ jobs:
       - name: Combine web and JavaScript artifacts
         run: mv dist/* web-build/
         # TODO: web-build files could get over-written. We might want to actually copy them to a directory (and change PUBLIC_URL as required).
-      - name: Deploy artifacts and API
-        run: npm run deploy
+      - name: Inject CNAME
+        run: echo "$CNAME" > web-build/CNAME
+        env:
+          CNAME: gregbrimble.com
+      - name: Deploy web and JavaScript
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: web-build
+          CLEAN: true
