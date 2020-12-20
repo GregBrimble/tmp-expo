@@ -1,0 +1,8 @@
+name = "tmp-expo"
+type = "webpack"
+workers_dev = true
+webpack_config = "api/webpack.config.js"
+
+[site]
+bucket = "./web-build"
+entry-point = "api"
