@@ -78,19 +78,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Install Node.js
-        shell: bash -l {0}
-        run: nvm install && nvm use
-        # TODO: Could cache ~/.nvm/.cache
-      - name: Cache Node.js
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-      - name: Install Node.js dependencies
-        run: npm ci
       - name: Download web artifacts
         uses: actions/download-artifact@v2
         with:
@@ -102,12 +89,11 @@ jobs:
           name: js-assets
           path: web-build
       - name: Combine web and JavaScript artifacts
-        run: mv dist/* web-build/
-        # TODO: web-build files could get over-written. We might want to actually copy them to a directory (and change PUBLIC_URL as required).
-      - name: Inject CNAME
-        run: echo "$CNAME" > web-build/CNAME
-        env:
-          CNAME: gregbrimble.com
+        run: cp -vn dist/* web-build/
+        # TODO: Overriding web-build files with dist files is disabled with `-n`. Instead, we should test and fail the workflow if there's a match.
+      - name: Add web-static files
+        run: cp -vn web-static/* web-build/
+        # TODO: Overriding web-build files with web-static files is disabled with `-n`. Instead, we should test and fail the workflow if there's a match.
       - name: Deploy web and JavaScript
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
