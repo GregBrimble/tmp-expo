@@ -134,7 +134,7 @@ jobs:
           PUBLIC_URL_ANDROID="$PUBLIC_URL""android-index.json"
           echo $EXPO_ANDROID_KEYSTORE_BASE64 > android.jks.base64
           base64 --decode android.jks.base64 > android.jks
-          turtle build:android \
+          npx turtle build:android \
             -o ./android-app-bundle.aab \
             --public-url "$PUBLIC_URL_ANDROID" \
             --keystore-path ./android.jks \
