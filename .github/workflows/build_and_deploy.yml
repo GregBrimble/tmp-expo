@@ -72,7 +72,7 @@ jobs:
           name: web-assets
           path: web-build/
   build-and-deploy-fab:
-    name: Build and Deploy FAB
+    name: Build and deploy FAB
     needs: [build-js, build-web]
     runs-on: ubuntu-latest
     steps:

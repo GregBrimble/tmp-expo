@@ -8,11 +8,7 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "preexport": "rimraf dist/",
-    "export": "expo export --public-url \"https://theevents.company/\"",
-    "build:web": "expo build:web",
-    "build": "concurrently \"npm:export\" \"npm:build:web\"",
-    "postbuild": "cp -vnr dist/* web-build/ && cp -vnr web-static/* web-build/",
-    "build:fab": "npm run build && npm run fab:build",
+    "build:fab": "npm run fab:build",
     "fab:build": "fab build",
     "fab:serve": "fab serve fab.zip"
   },
