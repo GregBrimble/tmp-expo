@@ -71,8 +71,8 @@ jobs:
         with:
           name: web-assets
           path: web-build/
-  deploy-web-and-js:
-    name: Deploy web and JavaScript
+  build-and-deploy-fab:
+    name: Build and Deploy FAB
     needs: [build-js, build-web]
     runs-on: ubuntu-latest
     steps:
@@ -94,6 +94,11 @@ jobs:
       - name: Add web-static files
         run: cp -vnr web-static/* web-build/
         # TODO: Overriding web-build files with web-static files is disabled with `-n`. Instead, we should test and fail the workflow if there's a match.
+      - name: Build and upload FAB to Linc
+        uses: gregbrimble/linc-fab-action@v1.0.0
+        with:
+          api_key: ${{ secrets.LINC_API_KEY }}
+          site_name: tmp-expo
       - name: Deploy web and JavaScript
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
@@ -103,7 +108,7 @@ jobs:
           CLEAN: true
   build-android:
     name: Build Android
-    needs: [deploy-web-and-js]
+    needs: [build-and-deploy-fab]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -152,7 +157,7 @@ jobs:
           path: ./android-app-bundle.aab
   build-ios:
     name: Build iOS
-    needs: [deploy-web-and-js]
+    needs: [build-and-deploy-fab]
     runs-on: macos-latest
     steps:
       - name: Checkout
