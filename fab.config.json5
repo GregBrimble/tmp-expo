@@ -8,6 +8,7 @@
       fallback: "/index.html",
     },
     "@fab/plugin-rewire-assets": {},
+    "./api/index.ts": {},
     // This section defines your build & runtime toolchains. See https://fab.dev/kb/plugins
   },
   settings: {
@@ -26,11 +27,5 @@
     // However, we recommend automatic deploys (triggered by git push)
     // using a service such as Linc (https://linc.sh)
     // • See https://fab.dev/kb/automatic-deploys for setup instructions.
-    "cf-workers": {
-      account_id: "@CF_WORKERS_ACCOUNT_ID",
-      api_token: "@CF_WORKERS_API_TOKEN",
-      workers_dev: true,
-      script_name: "tmp-expo",
-    },
   },
 }
