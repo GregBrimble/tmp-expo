@@ -22,12 +22,12 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - name: Setup Expo
-        uses: expo/expo-github-action@v5
-        with:
-          expo-version: 4.0.15
-          expo-packager: npm
-          expo-cache: true
+      # - name: Setup Expo
+      #   uses: expo/expo-github-action@v5
+      #   with:
+      #     expo-version: 4.0.15
+      #     expo-packager: npm
+      #     expo-cache: true
       - name: Install Node.js dependencies
         run: npm ci
       - name: Build JavaScript assets
@@ -56,12 +56,12 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - name: Setup Expo
-        uses: expo/expo-github-action@v5
-        with:
-          expo-version: 4.0.15
-          expo-packager: npm
-          expo-cache: true
+      # - name: Setup Expo
+      #   uses: expo/expo-github-action@v5
+      #   with:
+      #     expo-version: 4.0.15
+      #     expo-packager: npm
+      #     expo-cache: true
       - name: Install Node.js dependencies
         run: npm ci
       - name: Build web
@@ -182,7 +182,8 @@ jobs:
           PUBLIC_URL_IOS="$PUBLIC_URL""ios-index.json"
           npx turtle build:ios \
             -o ./ios.ipa \
-            --public-url "$PUBLIC_URL_IOS" \
+            --public-url "$PUBLIC_URL_IOS"
+        # TODO: Add credentials
         env:
           PUBLIC_URL: https://theevents.company/
       - name: Upload artifacts to GitHub Actions
