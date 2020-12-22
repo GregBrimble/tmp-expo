@@ -99,6 +99,11 @@ jobs:
         with:
           api_key: ${{ secrets.LINC_API_KEY }}
           site_name: tmp-expo
+      - name: Upload artifacts to GitHub Actions
+        uses: actions/upload-artifact@v2
+        with:
+          name: FAB
+          path: fab.zip
       - name: Deploy web and JavaScript
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
