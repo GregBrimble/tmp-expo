@@ -1,5 +1,5 @@
 {
-  "main": "src/index.tsx",
+  "main": "ui/index.tsx",
   "private": true,
   "scripts": {
     "start": "expo start",
