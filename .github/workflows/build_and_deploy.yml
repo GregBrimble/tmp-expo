@@ -91,9 +91,6 @@ jobs:
       - name: Combine web and JavaScript artifacts
         run: cp -vnr dist/* web-build/
         # TODO: Overriding web-build files with dist files is disabled with `-n`. Instead, we should test and fail the workflow if there's a match.
-      - name: Add web-static files
-        run: cp -vnr web-static/* web-build/
-        # TODO: Overriding web-build files with web-static files is disabled with `-n`. Instead, we should test and fail the workflow if there's a match.
       - name: Build and upload FAB to Linc
         uses: gregbrimble/linc-fab-action@v1.0.0
         with:
@@ -104,13 +101,6 @@ jobs:
         with:
           name: FAB
           path: fab.zip
-      - name: Deploy web and JavaScript
-        uses: JamesIves/github-pages-deploy-action@3.7.1
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: web-build
-          CLEAN: true
   build-android:
     name: Build Android
     needs: [build-and-deploy-fab]
