@@ -1,0 +1,113 @@
+name: Build FAB
+on:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  build-js:
+    name: Build JavaScript assets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Node.js
+        shell: bash -l {0}
+        run: nvm install && nvm use
+        # TODO: Could cache ~/.nvm/.cache
+      - name: Cache Node.js
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Setup Expo
+        uses: expo/expo-github-action@v5
+        with:
+          expo-version: 4.0.15
+          expo-packager: npm
+          expo-cache: true
+      - name: Install Node.js dependencies
+        run: npm ci
+      - name: Build JavaScript assets
+        run: expo export --public-url "$PUBLIC_URL"
+        env:
+          PUBLIC_URL: https://theevents.company/
+      - name: Upload artifacts to GitHub Actions
+        uses: actions/upload-artifact@v2
+        with:
+          name: js-assets
+          path: dist/
+  build-web:
+    name: Build web assets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Node.js
+        shell: bash -l {0}
+        run: nvm install && nvm use
+        # TODO: Could cache ~/.nvm/.cache
+      - name: Cache Node.js
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Setup Expo
+        uses: expo/expo-github-action@v5
+        with:
+          expo-version: 4.0.15
+          expo-packager: npm
+          expo-cache: true
+      - name: Install Node.js dependencies
+        run: npm ci
+      - name: Build web
+        run: expo build:web
+      - name: Upload artifacts to GitHub Actions
+        uses: actions/upload-artifact@v2
+        with:
+          name: web-assets
+          path: web-build/
+  build-fab:
+    name: Build FAB
+    needs: [build-js, build-web]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Node.js
+        shell: bash -l {0}
+        run: nvm install && nvm use
+        # TODO: Could cache ~/.nvm/.cache
+      - name: Cache Node.js
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install Node.js dependencies
+        run: npm ci
+      - name: Download web artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: web-assets
+          path: dist
+      - name: Download JavaScript artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: js-assets
+          path: web-build
+      - name: Combine web and JavaScript artifacts
+        run: cp -vnr dist/* web-build/
+        # TODO: Overriding web-build files with dist files is disabled with `-n`. Instead, we should test and fail the workflow if there's a match.
+      - name: Build FAB
+        run: npm run build:fab
+      - name: Upload artifacts to GitHub Actions
+        uses: actions/upload-artifact@v2
+        with:
+          name: FAB
+          path: fab.zip
