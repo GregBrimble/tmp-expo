@@ -1,75 +1,75 @@
-import { Theme } from "@theme-ui/css";
-import { default as twTheme } from "tailwindcss/defaultTheme";
+import { Theme } from '@theme-ui/css'
+import { default as twTheme } from 'tailwindcss/defaultTheme'
 
 const flattenColors = (colors: typeof twTheme.colors) =>
   Object.fromEntries(
     Object.entries(colors)
       .map(([key, value]) => {
-        if (value && typeof value === "object") {
+        if (value && typeof value === 'object') {
           return Object.entries(value).map(([subKey, subValue]) => [
             `${key}-${subKey}`,
-            subValue
-          ]);
+            subValue,
+          ])
         }
 
-        return [[key, value]];
+        return [[key, value]]
       })
-      .flat()
-  );
+      .flat(),
+  )
 
-const stringToNumber = (value: string) => Number(value.replace(/[^0-9.]/g, ""));
-const remToPx = (value: number) => value * 16;
+const stringToNumber = (value: string) => Number(value.replace(/[^0-9.]/g, ''))
+const remToPx = (value: number) => value * 16
 const isLength = (value: string) => {
-  value = value.toLowerCase();
+  value = value.toLowerCase()
   // TODO: Better parser
   return (
-    value.endsWith("rem") ||
-    value.endsWith("px") ||
-    value.endsWith("%") ||
+    value.endsWith('rem') ||
+    value.endsWith('px') ||
+    value.endsWith('%') ||
     !isNaN(+value)
-  );
-};
+  )
+}
 const convertLength = (value: string) => {
-  value = value.toLowerCase().trim();
+  value = value.toLowerCase().trim()
   // TODO: Better parser
-  if (value.endsWith("rem")) {
-    return remToPx(stringToNumber(value));
-  } else if (value.endsWith("px")) {
-    return stringToNumber(value);
-  } else if (value.endsWith("%")) {
-    return value;
+  if (value.endsWith('rem')) {
+    return remToPx(stringToNumber(value))
+  } else if (value.endsWith('px')) {
+    return stringToNumber(value)
+  } else if (value.endsWith('%')) {
+    return value
   } else {
-    throw new Error(`Unknown unit: ${value}`);
+    throw new Error(`Unknown unit: ${value}`)
   }
-};
+}
 
-const { current, ...colors } = flattenColors(twTheme.colors);
+const { current, ...colors } = flattenColors(twTheme.colors)
 const fontSizes = Object.values(twTheme.fontSize)
   .map(([value, other]) => value)
-  .map(convertLength);
+  .map(convertLength)
 
 // TODO: Negative
 const space = Object.fromEntries(
   Object.entries(twTheme.spacing).map(([key, value]) => [
     key,
-    convertLength(value)
-  ])
-);
+    convertLength(value),
+  ]),
+)
 const borderWidths = Object.fromEntries(
   Object.entries(twTheme.borderWidth).map(([key, value]) => [
     key,
-    convertLength(value)
-  ])
-);
+    convertLength(value),
+  ]),
+)
 const radii = Object.fromEntries(
   Object.entries(twTheme.borderRadius).map(([key, value]) => [
     key,
-    convertLength(value)
-  ])
-);
+    convertLength(value),
+  ]),
+)
 const { auto, ...zIndices } = Object.fromEntries(
-  Object.entries(twTheme.zIndex).map(([key, value]) => [key, Number(value)])
-);
+  Object.entries(twTheme.zIndex).map(([key, value]) => [key, Number(value)]),
+)
 
 // TODO: Custom breakpoints
 const sizes = Object.fromEntries([
@@ -79,15 +79,15 @@ const sizes = Object.fromEntries([
   ...Object.entries(
     twTheme.maxWidth(
       () => {
-        return;
+        return
       },
-      { breakpoints: () => [] }
-    )
+      { breakpoints: () => [] },
+    ),
   )
     .filter(([key, value]) => isLength(value))
-    .map(([key, value]) => [key, convertLength(value)])
-]);
-console.log(sizes);
+    .map(([key, value]) => [key, convertLength(value)]),
+])
+console.log(sizes)
 
 export const theme: Theme = {
   colors,
@@ -103,5 +103,5 @@ export const theme: Theme = {
   borderStyles: {}, // TODO
   radii,
   shadows: [], // TODO
-  zIndices
-};
+  zIndices,
+}

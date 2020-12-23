@@ -28,7 +28,8 @@
 
 ## Things to change
 
-- `PUBLIC_URL` in [`./github/workflows/build_and_deploy.yml`](./github/workflows/build_and_deploy.yml).
+- `PUBLIC_URL` in
+  [`./github/workflows/build_and_deploy.yml`](./github/workflows/build_and_deploy.yml).
 - [`./web-static/CNAME`](./web-static/CNAME).
 - `tmp-expo` and `company.theevents` in [`./app.json`](./app.json).
 
