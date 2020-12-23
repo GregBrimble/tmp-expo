@@ -78,6 +78,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Install Node.js
+        shell: bash -l {0}
+        run: nvm install && nvm use
+        # TODO: Could cache ~/.nvm/.cache
+      - name: Cache Node.js
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install Node.js dependencies
+        run: npm ci
       - name: Download web artifacts
         uses: actions/download-artifact@v2
         with:
@@ -91,11 +104,18 @@ jobs:
       - name: Combine web and JavaScript artifacts
         run: cp -vnr dist/* web-build/
         # TODO: Overriding web-build files with dist files is disabled with `-n`. Instead, we should test and fail the workflow if there's a match.
-      - name: Build and upload FAB to Linc
-        uses: gregbrimble/linc-fab-action@v1.0.0
-        with:
-          api_key: ${{ secrets.LINC_API_KEY }}
-          site_name: tmp-expo
+      - name: Build FAB
+        run: npm run build:fab
+      - name: Deploy FAB
+        run: npx fab deploy
+        env:
+          CF_WORKERS_ACCOUNT_ID: 5a883b414d4090a1442b20361f3c43a9
+          CF_WORKERS_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+      # - name: Build and upload FAB to Linc
+      #   uses: gregbrimble/linc-fab-action@v1.0.0
+      #   with:
+      #     api_key: ${{ secrets.LINC_API_KEY }}
+      #     site_name: tmp-expo
       - name: Upload artifacts to GitHub Actions
         uses: actions/upload-artifact@v2
         with:
