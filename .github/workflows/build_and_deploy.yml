@@ -116,6 +116,8 @@ jobs:
     needs: [build-fab]
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Install Node.js
         shell: bash -l {0}
         run: nvm install && nvm use
