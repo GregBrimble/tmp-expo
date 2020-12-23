@@ -8,7 +8,7 @@ const flattenColors = (colors: typeof twTheme.colors) =>
         if (value && typeof value === "object") {
           return Object.entries(value).map(([subKey, subValue]) => [
             `${key}-${subKey}`,
-            subValue,
+            subValue
           ]);
         }
 
@@ -17,8 +17,7 @@ const flattenColors = (colors: typeof twTheme.colors) =>
       .flat()
   );
 
-const stringToNumber = (value: string) =>
-  Number(value.replace(/[^0-9\.]/g, ""));
+const stringToNumber = (value: string) => Number(value.replace(/[^0-9.]/g, ""));
 const remToPx = (value: number) => value * 16;
 const isLength = (value: string) => {
   value = value.toLowerCase();
@@ -53,19 +52,19 @@ const fontSizes = Object.values(twTheme.fontSize)
 const space = Object.fromEntries(
   Object.entries(twTheme.spacing).map(([key, value]) => [
     key,
-    convertLength(value),
+    convertLength(value)
   ])
 );
 const borderWidths = Object.fromEntries(
   Object.entries(twTheme.borderWidth).map(([key, value]) => [
     key,
-    convertLength(value),
+    convertLength(value)
   ])
 );
 const radii = Object.fromEntries(
   Object.entries(twTheme.borderRadius).map(([key, value]) => [
     key,
-    convertLength(value),
+    convertLength(value)
   ])
 );
 const { auto, ...zIndices } = Object.fromEntries(
@@ -77,9 +76,16 @@ const sizes = Object.fromEntries([
   ...Object.entries(twTheme.width(() => twTheme.spacing))
     .filter(([key, value]) => isLength(value))
     .map(([key, value]) => [key, convertLength(value)]),
-  ...Object.entries(twTheme.maxWidth(() => {}, { breakpoints: () => [] }))
+  ...Object.entries(
+    twTheme.maxWidth(
+      () => {
+        return;
+      },
+      { breakpoints: () => [] }
+    )
+  )
     .filter(([key, value]) => isLength(value))
-    .map(([key, value]) => [key, convertLength(value)]),
+    .map(([key, value]) => [key, convertLength(value)])
 ]);
 console.log(sizes);
 
@@ -97,5 +103,5 @@ export const theme: Theme = {
   borderStyles: {}, // TODO
   radii,
   shadows: [], // TODO
-  zIndices,
+  zIndices
 };

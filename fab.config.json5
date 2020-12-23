@@ -1,25 +1,25 @@
 {
   plugins: {
     "@fab/input-static": {
-      dir: "web-build",
+      dir: "web-build"
     },
     "./api/index.ts": {},
     "@fab/plugin-render-html": {
-      fallback: "/index.html",
+      fallback: "/index.html"
     },
-    "@fab/plugin-rewire-assets": {},
+    "@fab/plugin-rewire-assets": {}
   },
   settings: {
     production: {
-      PUBLIC_URL: "https://theevents.company/",
-    },
+      PUBLIC_URL: "https://theevents.company/"
+    }
   },
   deploy: {
     "cf-workers": {
       account_id: "@CF_WORKERS_ACCOUNT_ID",
       api_token: "@CF_WORKERS_API_TOKEN",
       workers_dev: true,
-      script_name: "do-test",
+      script_name: "do-test"
       // custom_bindings: [
       //   {
       //     type: "kv_namespace", // durable_object_namespace
@@ -27,6 +27,6 @@
       //     namespace_id: "...", // get from Cloudflare dashboard
       //   },
       // ],
-    },
-  },
+    }
+  }
 }
