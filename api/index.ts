@@ -1,8 +1,10 @@
 import { FABRuntime } from '@fab/core'
 
-export default function({ Router }: FABRuntime): void {
-  Router.on(
-    '/api/:route(.*)',
-    async ({ params }) => new Response(JSON.stringify(params)),
-  )
+export const handleRequest = async (): Promise<Response> =>
+  new Response(JSON.stringify({ success: true }), {
+    headers: { 'Content-Type': 'application/json' },
+  })
+
+export default function ({ Router }: FABRuntime): void {
+  Router.on('/hello', handleRequest)
 }

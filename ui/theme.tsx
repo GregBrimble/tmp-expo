@@ -87,7 +87,6 @@ const sizes = Object.fromEntries([
     .filter(([key, value]) => isLength(value))
     .map(([key, value]) => [key, convertLength(value)]),
 ])
-console.log(sizes)
 
 export const theme: Theme = {
   colors,

@@ -1,3 +1,5 @@
+import { ReactTestInstance } from 'react-test-renderer'
+
 declare module 'tailwindcss/defaultTheme' {
   const theme: {
     colors: Record<string, string | Record<string, string>>
@@ -14,3 +16,23 @@ declare module 'tailwindcss/defaultTheme' {
   }
   export = theme
 }
+
+// https://github.com/testing-library/jest-native/issues/21
+/* eslint-disable */
+declare global {
+  namespace jest {
+    interface Matchers<R, T> {
+      toBeDisabled(): R
+      toContainElement(element: ReactTestInstance | null): R
+      toBeEmpty(): R
+      toHaveProp(attr: string, value?: any): R
+      toHaveTextContent(
+        text: string | RegExp,
+        options?: { normalizeWhitespace: boolean },
+      ): R
+      toBeEnabled(): R
+      toHaveStyle(style: object[] | object): R
+    }
+  }
+}
+/* eslint-enable */
