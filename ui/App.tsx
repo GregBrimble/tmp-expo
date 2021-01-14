@@ -6,6 +6,8 @@ import { theme } from './theme'
 
 // TODO: Fix H1 etc.
 
+const x = 'sm:mt-4:hover'
+
 export const App: FC = () => {
   return (
     <DripsyProvider theme={theme}>

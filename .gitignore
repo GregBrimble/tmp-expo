@@ -435,3 +435,6 @@ dist/
 ### FAB ###
 /.fab
 /fab.zip
+
+### STYLES ###
+/styles.json
